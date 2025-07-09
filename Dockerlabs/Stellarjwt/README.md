@@ -1,14 +1,14 @@
 # Stellarjwt
 
 ## 📄 Información
-- **Máquina**: Stellarjwt
-- **Objetivo**: Acceso root
-- **Descripción**: Máquina vulnerable desplegada con Docker que explota vulnerabilidades en JWT (JSON Web Tokens) para lograr acceso root.
+- **Máquina**: Stellarjwt.
+- **Objetivo**: Acceso root.
+- **Descripción**: Máquina vulnerable desplegada con `Docker` que explota vulnerabilidades en JWT (JSON Web Tokens) para lograr acceso root.
 
 ## ⚙️ Despliegue de la Máquina
-1- Vamos a descargar el zip de la plataforma **DockerLabs**  
-2- Extraemos la máquina vulnerable con el comando `unzip`  
-3- Desplegamos la máquina con el comando `sudo bash auto_deploy.sh dockerlabs.tar`  
+1- Vamos a descargar el zip de la plataforma **DockerLabs**.  
+2- Extraemos la máquina vulnerable con el comando `unzip`.  
+3- Desplegamos la máquina con el comando `sudo bash auto_deploy.sh stellarjwt.tar`.  
 ![Máquina desplegada](images/Maquina%20desplegada.png)  
 
 ## 📶 Testeo de Conectividad
@@ -16,7 +16,7 @@ Verificamos la conectividad con la máquina mediante ping:
 ![Testo](images/Testeo.png)  
 
 ## 🔍 Escaneo de puertos con Nmap
-Escaneo completo de puertos  
+Realizamos un escaneo completo de puertos.  
 ![Escaneo de puertos](images/Escaneo%20de%20puertos.png)  
 Resultado:
 - Puerto `22/tcp` **SSH** Servicio **OpenSSH 9.6p1**
@@ -24,7 +24,7 @@ Resultado:
 
 ## 🌐 Acceso al servidor web
 Accedemos mediante el navegador a la dirección `172.17.0.2`.  
-En la página nos encontramos con la frase **¿Qué astrónomo alemán descubrió Neptuno?**
+En la página nos encontramos con la frase **¿Qué astrónomo alemán descubrió Neptuno?**.
 ![Página web](images/Página%20web.png)  
 Ante la pregunta mostrada en la página, realizamos una búsqueda en **Google** confirmando que el astrónomo fue **Johann Gottfried Galle**.  
 Este nombre lo guardamos como una lista en un archivo para uso posterior en fases de explotación.
@@ -40,7 +40,7 @@ Al acceder a la ruta podemos ver una imagen de una galaxia, pero si inspeccionam
 Podemos utilizar páginas como: **[jwt.io](https://jwt.io)** o **[CyberChef](https://gchq.github.io/CyberChef/)** para analizar el token obtenido.
 ![JWT:IO](images/JWT.png)  
 
-## 🧠 Fuerza bruta
+## 🧠 Fuerza bruta con Hydra
 Recordemos que la pregunta de la página web de inicio era: **¿Qué astrónomo alemán descubrió Neptuno?** y su respuesta es: **Johann Gottfried Galle** la cual guardamos como una lista en un archivo de texto.  
 Ahora, realizamos fuerza bruta haciendo uso de `Hydra` con el usuario decodificado del token **JWT** y el archivo que guardamos anteriormente. 
 ![Fuerza bruta (Hydra)](images/Hydra.png)    
@@ -73,7 +73,7 @@ Debemos usar `sudo -u elite` porque el comando tiene que ejecutarse como el usua
 Ejecutamos un tratamiento TTY con `script /dev/null -c bash` para evitar errores a la hora de ejecutar comandos. El atajo `CTRL+L` no está disponible para limpiar la terminal, pero el comando `clear` sí funciona correctamente.  
 ![TTY](images/TTY.png)  
 
-## 👑 Escalada de privilegios root
+## 👑 Escalada de privilegios a root
 Volvemos a intentar ver los privilegios de usuario, en este caso del usuario `elite` y vemos como resultado que podemos ejecutar el comando `chown` como `root` sin la necesidad de contraseña. El comando `chown` se utiliza para cambiar el usuario propietario y/o el grupo propietario de un archivo o directorio específico en sistemas Unix/Linux. 
 ![Schown](images/Chown.png)  
 Podemos ayudarnos de nuevo de la página **[GTFOBins](https://gtfobins.github.io/)** para ver que podemos hacer.  
@@ -85,11 +85,11 @@ Podemos ayudarnos de nuevo de la página **[GTFOBins](https://gtfobins.github.io
 3- Ahora ya solo queda modificar la lines `root` para quitarle la contraseña  `x` para poder acceder sin la necesidad de autenticación.  
 ![Edición de la linea root](images/Root.png)  
 
-Finalmente hemos conseguido el acceso root.  
+Finalmente hemos conseguido el acceso `root`.  
 ![Acceso Root](images/Root-2.png)  
 
 ## ✅ Conclusión
-- **Acceso inicial**: Explotación de `JWT` + fuerza bruta con `Hydra` (Credenciales `neptuno:Gottfried`).
+- **Acceso inicial**: Explotación de `JWT` + fuerza bruta con `Hydra` (Credenciales: `neptuno:Gottfried`).
 - **Escalada**: 
     - `neptuno` → `nasa` (contraseña `Eisenhower` en `-carta_a_la_nasa.txt`). 
     - `nasa` → `elite` (abuso de `socat`  via `sudo -u elite`).
