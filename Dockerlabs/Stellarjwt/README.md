@@ -76,7 +76,7 @@ Volvemos a intentar ver los privilegios de usuario, en este caso del usuario `el
 ![Schown](images/Chown.png)  
 Podemos ayudarnos de nuevo de la página **[GTFOBins](https://gtfobins.github.io/)** para ver que podemos hacer.  
 ![GTFOBins-Chown](images/GTFOBins-Chown.png)  
-1. Modificamos la propiedad del directorio `/etc`.
+1. Modificamos la propiedad del directorio `/etc`.  
 ![Directorio /etc](images/Directorio%20etc.png)  
 2. Hacemos lo mismo para `/etc/passwd`.  
 ![Ruta /etc/passwd](images/Passwd.png)  
