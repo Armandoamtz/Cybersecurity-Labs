@@ -18,7 +18,7 @@ Verificamos la conectividad con la máquina mediante ping:
 ## 🔍 Escaneo de puertos con Nmap
 Realizamos un escaneo completo de puertos.  
 ![Escaneo de puertos](images/Escaneo%20de%20puertos.png)  
-Resultado:
+Hallazgos:
 - Puerto `22/tcp` **SSH** Servicio **OpenSSH 9.6p1**
 - Puerto `80/tcp` **HTTP** Servicio **Apache httpd 2.4.58**
 
@@ -32,6 +32,7 @@ Este nombre lo guardamos como una lista en un archivo para uso posterior en fase
 ## 🔍 Enumeración con Gobuster
 Además de la investigación manual, podemos realizar un escaneo con `Gobuster` para descubrir rutas ocultas o directorios sensibles:
 ![Enumeración con Gobuster](images/Gobuster.png)  
+Hallazgos:
 Al utilizar `Gobuster` logramos encontrar la ruta **/universe**
 
 ## 🔑 Detección de JWT
@@ -44,7 +45,7 @@ Podemos utilizar páginas como: **[jwt.io](https://jwt.io)** o **[CyberChef](htt
 Recordemos que la pregunta de la página web de inicio era: **¿Qué astrónomo alemán descubrió Neptuno?** y su respuesta es: **Johann Gottfried Galle** la cual guardamos como una lista en un archivo de texto.  
 Ahora, realizamos fuerza bruta haciendo uso de `Hydra` con el usuario decodificado del token **JWT** y el archivo que guardamos anteriormente. 
 ![Fuerza bruta (Hydra)](images/Hydra.png)    
-Resultados: 
+Hallazgos:
 - Login: **neptuno**
 - password: **Gottfried**
 
@@ -54,7 +55,7 @@ Nos logueamos al sistema con el usuario y contraseña encontrados anteriormente.
 
 ## 🔐 Privilegios
 Para dominar el sistema debemos de hacer **escalada de privilegios** ya que aun no somos usuario `root`, somos el usuario `neptuno`.
-Lo primero que hacemos es probar el comando `sudo -l` que sirve para listar los privilegios que tiene un usuario con `sudo`, pero vemos que no funciona, asi que nos dirigimos a la ruta `/etc/passwd` para observar qué usuarios existen actualmente en el sistema.  
+Lo primero que hacemos es probar el comando `sudo -l` que sirve para listar los privilegios que tiene un usuario con `sudo`, pero vemos que no funciona, así que nos dirigimos a la ruta `/etc/passwd` para observar qué usuarios existen actualmente en el sistema.  
 ![Usuarios del sistema](images/Usuarios.png)  
 Observamos que hay 2 usuarios `nasa` y `elite`.  
 
@@ -68,7 +69,7 @@ Ahora intentamos ver los privilegios que tiene el usuario `nasa` y encontramos q
 ## 🚀 Escalada de privilegios a elite
 ![Socat-2](images/Socat-2.png)  
 Debemos usar `sudo -u elite` porque el comando tiene que ejecutarse como el usuario `elite`, no como usuario `root`.  
-Ejecutamos un tratamiento TTY con `script /dev/null -c bash` para evitar errores a la hora de ejecutar comandos. El atajo `CTRL+L` no está disponible para limpiar la terminal, pero el comando `clear` sí funciona correctamente.  
+Ejecutamos un tratamiento TTY con `script /dev/null -c bash` para evitar errores a la hora de ejecutar comandos. El atajo `CTRL + L` no está disponible para limpiar la terminal, pero el comando `clear` sí funciona correctamente.  
 ![TTY](images/TTY.png)  
 
 ## 👑 Escalada de privilegios a root
@@ -80,7 +81,21 @@ Podemos ayudarnos de nuevo de la página **[GTFOBins](https://gtfobins.github.io
 ![Directorio /etc](images/Directorio%20etc.png)  
 2. Hacemos lo mismo para `/etc/passwd`.  
 ![Ruta /etc/passwd](images/Passwd.png)  
-3. Ahora ya solo queda modificar la lines `root` para quitarle la contraseña  `x` para poder acceder sin la necesidad de autenticación.  
+3. Ahora ya solo queda modificar la linea `root` para quitar la `x` y así poder acceder sin la necesidad de autenticación. y para ello usamos el comando `sed -i 's/x//g' /etc`
+
+**Explicación:**
+- `sed` Herramienta para editar texto (Stream EDitor).  
+- `-i` Modifica el archivo directamente (sin crear copia).  
+- `'s/x//g'` Instrucción de búsqueda y reemplazo.
+
+**La instrucción 's/x//g' significa:**
+- `s` Sustituir.
+- `x` Lo que busca (la letra "x").
+- `//` Lo reemplaza con nada (lo elimina).
+- `g` Lo hace en toda la linea global.
+
+⚠️ **¡Atención!**
+- Para probar primero sin modificar el archivo podemos utilizar el comando `sed 's/x//g' /etc`, sin la opción `-i`, de esta forma tendremos una vista previa.  
 ![Edición de la linea root](images/Root.png)  
 Finalmente hemos conseguido el acceso `root`.  
 ![Acceso Root](images/Root-2.png)  
