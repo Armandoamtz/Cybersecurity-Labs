@@ -4,7 +4,7 @@
 
 ## 📶 Reconocimiento
 Descubrimiento de Host con **arp-scan**  
-![Descubrimiento de Hosts](King%20Of%20Hacker/images/01-descubrimiento-hosts.png)  
+![Descubrimiento de Hosts](images/01-descubrimiento-hosts.png)  
 - IP de maquina objetivo: **192.168.100.134**
 
 También podemos realizar un descubrimiento del host haciendo uso del comando:
@@ -17,7 +17,7 @@ Realizamos un escaneo completo de puertos.
 ```bash
 sudo nmap -sSVC -Pn -n --open --min-rate 5000 -p- 192.168.100.134
 ```
-![Escaneo de puertos](King%20Of%20Hacker/images/02-escaneo-puertos.png)  
+![Escaneo de puertos](images/02-escaneo-puertos.png)  
 **Explicación de parámetros:**  
 - `-sSVC`: Realiza el escaneo **SYN**, detecta versiones `-sV` y ejecuta scripts básicos `-sC`
 - `-Pn`: Omite la detección de host (asume que el host esta vivo)
